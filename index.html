@@ -1548,6 +1548,38 @@
       });
 
       /* ------------------------------------------------------------------------
+         1-2. 화면 전환 로직 (스토리뷰 ↔ 굽기 가이드뷰)
+         ------------------------------------------------------------------------ */
+      const storyView = document.getElementById("storyView");
+      const guideView = document.getElementById("guideView");
+      const headerModeBtn = document.getElementById("headerModeBtn");
+      const openGuideBtn = document.getElementById("openGuideBtn");
+      const backToStoryBtn = document.getElementById("backToStoryBtn");
+
+      function switchView(targetName, scrollToTop = true) {
+        if (targetName === "guide") {
+          storyView.classList.remove("active");
+          guideView.classList.add("active");
+          headerModeBtn.textContent = "스토리로 돌아가기 →";
+        } else {
+          guideView.classList.remove("active");
+          storyView.classList.add("active");
+          headerModeBtn.textContent = "굽기 가이드 →";
+        }
+        if (scrollToTop) {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+
+      headerModeBtn.addEventListener("click", () => {
+        const isStoryActive = storyView.classList.contains("active");
+        switchView(isStoryActive ? "guide" : "story");
+      });
+
+      openGuideBtn.addEventListener("click", () => switchView("guide"));
+      backToStoryBtn.addEventListener("click", () => switchView("story"));
+
+      /* ------------------------------------------------------------------------
          2. 에어프라이어 굽기 타이머 (Date 기준 계산, Wake Lock, 5분 전 알림, ?speed=60)
          ------------------------------------------------------------------------ */
       const toastEl = document.getElementById("toastBanner");
