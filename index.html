@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>트레이더스 K-데니쉬 · 프랑스의 결, 한국의 속</title>
+
+  <!-- 폰트 CDN: 제목용 마루부리(네이버), 본문용 Pretendard(jsDelivr) -->
+  <link rel="preconnect" href="https://hangeul.pstatic.net" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link href="https://hangeul.pstatic.net/hangeul_static/css/maru-buri.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       1. 디자인 토큰 (트레이더스 K-데니쉬 브랜드 팔레트)
+       ========================================================================== */
+    :root {
+      --bg-cream: #FAF6EE;
+      --text-charcoal: #2B2A28;
+      --gold-injeolmi: #C8963E;
+      --wheat-light: #E9D8B4;
+      --card-bg: #F2E8D5;
+      --alert-red: #B5452F;
+      --caption-gray: #786C60;
+      --corn-yellow: #F4C44E;
+      --white: #FFFFFF;
+
+      --font-serif: 'MaruBuri', 'Nanum Myeongjo', 'AppleMyungjo', Georgia, serif;
+      --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+
+      --radius-photo: 18px;
+      --radius-pill: 999px;
+      --app-max-width: 480px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: #EAE2D3;
+      color: var(--text-charcoal);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      background-color: #EAE2D3;
+      overflow-x: clip;
+    }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    .serif {
+      font-family: var(--font-serif);
+      letter-spacing: -0.025em;
+    }
+
+    /* 모바일 세로(390px 기준) ~ PC 최대 480px 중앙 프레임 */
+    .app-shell {
+      width: 100%;
+      max-width: var(--app-max-width);
+      min-height: 100dvh;
+      background-color: var(--bg-cream);
+      position: relative;
+      box-shadow: 0 0 48px rgba(43, 42, 40, 0.09);
+      overflow-x: clip;
+    }
+
+    /* 브랜드 모티프: 점 3개 */
+    .brand-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .brand-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .brand-dots span:nth-child(1) { background-color: var(--gold-injeolmi); }
+    .brand-dots span:nth-child(2) { background-color: var(--text-charcoal); }
+    .brand-dots span:nth-child(3) { background-color: var(--corn-yellow); }
+
+    /* ==========================================================================
+       2. 상단 고정 바 (심플 에디토리얼 헤더)
+       ========================================================================== */
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 54px;
+      padding: 0 20px;
+      background: rgba(250, 246, 238, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(43, 42, 40, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+      color: var(--text-charcoal);
+    }
+    .header-logo-text {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .header-right-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-guide-btn {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--bg-cream);
+      background-color: var(--text-charcoal);
+      padding: 6px 13px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .header-guide-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* 타이머 동작 시 상단에 나타나는 미니 알약 타이머 */
+    .mini-timer-pill {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--gold-injeolmi);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 6px 11px;
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      cursor: pointer;
+    }
+    .mini-timer-pill.visible {
+      display: inline-flex;
+    }
+    .mini-timer-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--bg-cream);
+      animation: blinkDot 1.1s infinite ease-in-out;
+    }
+    @keyframes blinkDot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+
+    /* 화면 전환 뷰 컨테이너 */
+    .view-pane {
+      display: none;
+    }
+    .view-pane.active {
+      display: block;
+      animation: viewFadeIn 0.32s ease;
+    }
+    @keyframes viewFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       3. 공통 스크롤 등장 모션
+       ========================================================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       ① 에디토리얼 커버 (풀블리드 화보 + "프랑스의 결, 한국의 속.")
+       ========================================================================== */
+    .hero-editorial {
+      position: relative;
+      padding: 16px 16px 40px;
+    }
+
+    .hero-photo-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border-radius: 22px;
+      overflow: hidden;
+      background-color: #D8C7AB;
+    }
+
+    .hero-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.03);
+      animation: slowZoomOut 9s ease-out forwards;
+    }
+
+    @keyframes slowZoomOut {
+      from { transform: scale(1.06); }
+      to { transform: scale(1); }
+    }
+
+    /* 사진 위 가독성을 살리는 따뜻한 하단 그라데이션 */
+    .hero-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(43, 42, 40, 0.14) 0%,
+        rgba(43, 42, 40, 0.08) 42%,
+        rgba(43, 42, 40, 0.78) 100%
+      );
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px 22px 26px;
+      color: var(--bg-cream);
+    }
+
+    .hero-top-tag {
+      align-self: flex-start;
+      background: rgba(250, 246, 238, 0.88);
+      color: var(--text-charcoal);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      backdrop-filter: blur(6px);
+    }
+
+    .hero-copy-block {
+      text-align: left;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.28;
+      color: var(--bg-cream);
+      margin-bottom: 10px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+    }
+    .hero-title span {
+      color: var(--corn-yellow);
+    }
+
+    .hero-lead {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(250, 246, 238, 0.92);
+      max-width: 100%;
+    }
+
+    /* 커버 아래 에디토리얼 캡션 스트립 */
+    .hero-caption-strip {
+      margin-top: 16px;
+      padding: 0 6px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--caption-gray);
+      border-bottom: 1px solid rgba(43, 42, 40, 0.1);
+    }
+    .hero-caption-strip strong {
+      color: var(--text-charcoal);
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       ② STORY 01 : 프랑스의 결 (라콩비에트 버터 화보 + 매거진 레이아웃)
+       ========================================================================== */
+    .story-section {
+      padding: 36px 20px 48px;
+    }
+
+    .chapter-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: var(--gold-injeolmi);
+      margin-bottom: 10px;
+    }
+
+    .editorial-heading {
+      font-family: var(--font-serif);
+      font-size: 25px;
+      font-weight: 700;
+      line-height: 1.36;
+      color: var(--text-charcoal);
+      margin-bottom: 12px;
+    }
+
+    .editorial-body {
+      font-size: 14px;
+      color: var(--caption-gray);
+      line-height: 1.68;
+      margin-bottom: 24px;
+    }
+
+    /* 비대칭 2장 화보 콜라주 (버터 + 겹결 페이스트리) */
+    .butter-collage {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 24px;
+    }
+
+    .collage-main {
+      aspect-ratio: 3 / 4;
+      border-radius: var(--radius-photo);
+      overflow: hidden;
+      background-color: var(--card-bg);
+    }
+    .collage-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .collage-side {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .collage-sub-photo {
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-photo);
+      overflow: hidden;
+      background-color: var(--card-bg);
+    }
+    .collage-sub-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .collage-note {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 14px 13px;
+    }
+    .collage-note strong {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 18px;
+      color: var(--text-charcoal);
+      margin-bottom: 2px;
+    }
+    .collage-note span {
+      font-size: 12px;
+      color: var(--caption-gray);
+      line-height: 1.4;
+      display: block;
+    }
+
+    /* 겹결 리본 인포 */
+    .butter-specs {
+      border-top: 1px solid rgba(43, 42, 40, 0.12);
+      border-bottom: 1px solid rgba(43, 42, 40, 0.12);
+      padding: 18px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .butter-spec-item:first-child {
+      border-right: 1px solid rgba(43, 42, 40, 0.1);
+      padding-right: 12px;
+    }
+    .butter-spec-item small {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--gold-injeolmi);
+      margin-bottom: 4px;
+    }
+    .butter-spec-item strong {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-charcoal);
+      margin-bottom: 3px;
+    }
+    .butter-spec-item p {
+      font-size: 12.5px;
+      color: var(--caption-gray);
+      line-height: 1.45;
+    }
+
+    /* ==========================================================================
+       ③ STORY 02 : 한국의 속 (실사 음식 화보 기반 3가지 맛 룩북)
+       ========================================================================== */
+    .flavors-lookbook {
+      background-color: var(--text-charcoal);
+      color: var(--bg-cream);
+      border-radius: 28px;
+      margin: 0 10px;
+      padding: 38px 18px 34px;
+    }
+
+    .flavors-lookbook .chapter-label {
+      color: var(--corn-yellow);
+    }
+    .flavors-lookbook .editorial-heading {
+      color: var(--bg-cream);
+    }
+    .flavors-lookbook .editorial-body {
+      color: rgba(250, 246, 238, 0.74);
+      margin-bottom: 20px;
+    }
+
+    /* 맛 선택 탭 */
+    .taste-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background-color: rgba(250, 246, 238, 0.08);
+      padding: 5px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 20px;
+    }
+
+    .taste-tab {
+      border: none;
+      background: transparent;
+      color: rgba(250, 246, 238, 0.68);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 9px 6px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.22s ease;
+    }
+    .taste-tab i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .taste-tab.active {
+      background-color: var(--bg-cream);
+      color: var(--text-charcoal);
+    }
+
+    /* 선택된 맛의 대형 화보 & 테이스팅 노트 */
+    .taste-showcase {
+      position: relative;
+    }
+
+    .taste-photo-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 4.3;
+      border-radius: 20px;
+      overflow: hidden;
+      background-color: #3A3835;
+      margin-bottom: 18px;
+    }
+
+    .taste-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.35s ease, transform 0.5s ease;
+    }
+
+    .taste-photo-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(43, 42, 40, 0.78);
+      backdrop-filter: blur(6px);
+      color: var(--bg-cream);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .taste-photo-badge i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .taste-pairing-badge {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      background-color: var(--corn-yellow);
+      color: var(--text-charcoal);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 13px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+    }
+
+    .taste-note-area {
+      padding: 0 4px;
+    }
+    .taste-fusion-line {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--corn-yellow);
+      margin-bottom: 5px;
+    }
+    .taste-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--bg-cream);
+      margin-bottom: 8px;
+    }
+    .taste-desc {
+      font-size: 13.5px;
+      color: rgba(250, 246, 238, 0.84);
+      line-height: 1.65;
+    }
+
+    /* ==========================================================================
+       ④ STORY 03 : 홈카페 브런치 무드 (해동 없이 15분 + 12입 지퍼백)
+       ========================================================================== */
+    .lifestyle-section {
+      padding: 46px 20px 44px;
+    }
+
+    .brunch-banner {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 22px;
+      position: relative;
+      background-color: var(--card-bg);
+    }
+    .brunch-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 3가지 핵심 장점 — 간결한 타이포 리스트 */
+    .promise-list {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid rgba(43, 42, 40, 0.1);
+    }
+
+    .promise-row {
+      padding: 16px 2px;
+      border-bottom: 1px solid rgba(43, 42, 40, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+    .promise-row strong {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-charcoal);
+      white-space: nowrap;
+    }
+    .promise-row span {
+      font-size: 13.5px;
+      color: var(--caption-gray);
+      text-align: right;
+    }
+
+    /* 12입 박스 한 줄 요약 */
+    .box-composition-bar {
+      margin-top: 22px;
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .box-comp-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-charcoal);
+    }
+    .box-comp-dots {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--caption-gray);
+    }
+    .box-comp-dots span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .box-comp-dots i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* ==========================================================================
+       ⑤ 마무리 & 굽기 가이드 연결 푸터
+       ========================================================================== */
+    .closing-footer {
+      padding: 40px 20px calc(46px + env(safe-area-inset-bottom, 0px));
+      background-color: var(--card-bg);
+      border-radius: 28px 28px 0 0;
+      text-align: center;
+    }
+
+    .closing-dots {
+      margin-bottom: 14px;
+    }
+
+    .closing-title {
+      font-family: var(--font-serif);
+      font-size: 27px;
+      font-weight: 700;
+      line-height: 1.32;
+      color: var(--text-charcoal);
+      margin-bottom: 8px;
+    }
+    .closing-title span {
+      color: var(--gold-injeolmi);
+    }
+
+    .closing-desc {
+      font-size: 14px;
+      color: var(--caption-gray);
+      margin-bottom: 24px;
+    }
+
+    .cta-guide-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      height: 54px;
+      border-radius: 16px;
+      background-color: var(--text-charcoal);
+      color: var(--bg-cream);
+      font-family: var(--font-sans);
+      font-size: 15.5px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(43, 42, 40, 0.16);
+      transition: transform 0.15s ease;
+    }
+    .cta-guide-btn:active {
+      transform: scale(0.98);
+    }
+
+    .footer-disclaimer {
+      margin-top: 24px;
+      font-size: 11.5px;
+      color: var(--caption-gray);
+    }
+
+    /* ==========================================================================
+       ⑥ 에어프라이어 굽기 가이드 뷰 (전환 화면)
+       ========================================================================== */
+    .guide-view-wrap {
+      padding: 24px 20px calc(48px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .guide-back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card-bg);
+      border: none;
+      color: var(--text-charcoal);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      margin-bottom: 18px;
+    }
+
+    .guide-steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .guide-step-card {
+      background-color: var(--card-bg);
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .guide-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: var(--gold-injeolmi);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .guide-step-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-charcoal);
+      margin-bottom: 3px;
+    }
+    .guide-step-card p {
+      font-size: 13.5px;
+      color: var(--caption-gray);
+      line-height: 1.48;
+    }
+
+    .guide-footnote {
+      font-size: 12px;
+      color: var(--caption-gray);
+      margin-top: 10px;
+      padding-left: 4px;
+    }
+
+    /* 타이머 카드 */
+    .timer-card {
+      margin-top: 24px;
+      background-color: var(--text-charcoal);
+      color: var(--bg-cream);
+      border-radius: 22px;
+      padding: 22px 20px;
+      box-shadow: 0 16px 32px rgba(43, 42, 40, 0.16);
+    }
+
+    .timer-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background-color: rgba(255, 255, 255, 0.08);
+      padding: 5px;
+      border-radius: 14px;
+      margin-bottom: 22px;
+    }
+
+    .timer-tab {
+      background: transparent;
+      border: none;
+      color: rgba(250, 246, 238, 0.68);
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 10px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .timer-tab.active {
+      background-color: var(--gold-injeolmi);
+      color: var(--white);
+    }
+
+    .timer-ring-box {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .ring-track {
+      fill: none;
+      stroke: rgba(250, 246, 238, 0.12);
+      stroke-width: 10;
+    }
+
+    .ring-progress {
+      fill: none;
+      stroke: var(--gold-injeolmi);
+      stroke-width: 10;
+      stroke-linecap: round;
+      transform: rotate(-90deg);
+      transform-origin: 110px 110px;
+      transition: stroke-dashoffset 0.2s linear;
+    }
+
+    .ring-checkpoint-dot {
+      fill: var(--corn-yellow);
+      stroke: var(--text-charcoal);
+      stroke-width: 2.5;
+    }
+
+    .timer-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .timer-digits {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+      color: var(--bg-cream);
+      line-height: 1.1;
+    }
+
+    .timer-temp-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wheat-light);
+      margin-top: 6px;
+    }
+
+    .timer-checkpoint-legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      color: rgba(250, 246, 238, 0.72);
+      margin-bottom: 16px;
+    }
+    .timer-checkpoint-legend i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--corn-yellow);
+      display: inline-block;
+    }
+
+    .timer-controls {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .btn-timer-primary {
+      background-color: var(--gold-injeolmi);
+      color: var(--white);
+      height: 48px;
+      border-radius: 14px;
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-timer-primary.is-running {
+      background-color: var(--corn-yellow);
+      color: var(--text-charcoal);
+    }
+
+    .btn-timer-reset {
+      background-color: rgba(250, 246, 238, 0.12);
+      color: var(--bg-cream);
+      height: 48px;
+      border-radius: 14px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .timer-status-text {
+      text-align: center;
+      font-size: 13px;
+      color: var(--wheat-light);
+      min-height: 20px;
+    }
+
+    /* 혹시 실패했다면 아코디언 */
+    .troubleshoot-wrap {
+      margin-top: 26px;
+    }
+    .troubleshoot-heading {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--alert-red);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .troubleshoot-heading::before {
+      content: "!";
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--alert-red);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .accordion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .accordion-item {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .accordion-trigger {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 15px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-align: left;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-charcoal);
+      cursor: pointer;
+    }
+
+    .accordion-chevron {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+      color: var(--caption-gray);
+    }
+    .accordion-item.open .accordion-chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.28s ease;
+    }
+    .accordion-panel-inner {
+      padding: 11px 16px 15px;
+      font-size: 13.5px;
+      color: var(--alert-red);
+      font-weight: 600;
+      line-height: 1.5;
+      border-top: 1px dashed rgba(43, 42, 40, 0.1);
+    }
+
+    .guide-storage-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .guide-storage-card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 15px 14px;
+      text-align: center;
+    }
+    .guide-storage-card strong {
+      display: block;
+      font-size: 13.5px;
+      color: var(--text-charcoal);
+      margin-bottom: 3px;
+    }
+    .guide-storage-card span {
+      font-size: 12.5px;
+      color: var(--caption-gray);
+    }
+
+    /* 하단 토스트 */
+    .toast-banner {
+      position: fixed;
+      left: 50%;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      transform: translate(-50%, 120%);
+      width: calc(100% - 36px);
+      max-width: 440px;
+      background-color: var(--text-charcoal);
+      color: var(--bg-cream);
+      border: 1.5px solid var(--gold-injeolmi);
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 13.5px;
+      font-weight: 700;
+      text-align: center;
+      box-shadow: 0 12px 28px rgba(43, 42, 40, 0.28);
+      z-index: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+    }
+    .toast-banner.show {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .hero-photo-frame img { animation: none; transform: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- 상단 고정 바 -->
+    <header class="top-header">
+      <a href="#top" id="headerBrandLink" class="header-brand">
+        <span class="brand-dots" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="header-logo-text">TRADERS</span>
+      </a>
+      <div class="header-right-group">
+        <button type="button" id="miniTimerPill" class="mini-timer-pill" aria-label="굽기 타이머로 이동">
+          <span class="mini-timer-dot" aria-hidden="true"></span>
+          <span id="miniTimerText">15:00</span>
+        </button>
+        <button type="button" id="headerModeBtn" class="header-guide-btn">굽기 가이드 →</button>
+      </div>
+    </header>
+
+    <!-- ======================================================================
+         [화면 A] 브랜드 스토리 & 제품 소개 (기본 화면)
+         ====================================================================== -->
+    <div id="storyView" class="view-pane active">
+      <main id="top">
+        <!-- ① 에디토리얼 커버: 갓 구운 황금빛 데니쉬 페이스트리 실사 화보 -->
+        <section class="hero-editorial">
+          <div class="hero-photo-frame">
+            <img
+              src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=900&q=85"
+              alt="겹겹이 바삭한 결이 살아있는 황금빛 프랑스 버터 데니쉬 페이스트리"
+              onerror="this.onerror=null;this.src='https://placehold.co/720x900/C8873D/FAF6EE?text=TRADERS+K-DANISH';"
+            />
+            <div class="hero-photo-overlay">
+              <span class="hero-top-tag">트레이더스 단독 · 냉동 베이커리</span>
+              <div class="hero-copy-block">
+                <h1 class="hero-title">프랑스의 결,<br /><span>한국의 속.</span></h1>
+                <p class="hero-lead">
+                  라콩비에트 프랑스 버터로 접은 바삭한 데니쉬 위에 꾸덕한 인절미·흑임자 크림을 올렸어요.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-caption-strip">
+            <span><strong>트레이더스 K-데니쉬</strong> · <span class="nowrap">12입</span> 지퍼백</span>
+            <span>해동 없이 에어프라이어 <span class="nowrap">15분</span></span>
+          </div>
+        </section>
+
+        <!-- ② STORY 01 : 프랑스의 결 (라콩비에트 버터 + 데니쉬 크러스트 화보) -->
+        <section class="story-section reveal">
+          <span class="chapter-label">01 · FRENCH BUTTER</span>
+          <h2 class="editorial-heading">버터가 맛을 결정하니까,<br />버터부터 골랐어요</h2>
+          <p class="editorial-body">
+            반죽과 버터를 겹겹이 접어 올린 데니쉬는 버터의 풍미가 곧 전체의 맛을 좌우해요. 프랑스 샤랑트 푸아투산 '라콩비에트' 버터로 반죽을 접어, 오븐 열에 부풀어 오르는 바삭한 결을 살렸어요.
+          </p>
+
+          <!-- 비대칭 2장 화보 콜라주 (황금빛 데니쉬 크러스트 + 프랑스 버터) -->
+          <div class="butter-collage">
+            <figure class="collage-main">
+              <img
+                src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=85"
+                alt="오븐에서 노릇하게 구워져 겹겹이 결이 살아있는 황금빛 데니쉬 페이스트리"
+                onerror="this.onerror=null;this.src='https://placehold.co/600x800/D2985A/FAF6EE?text=Golden+Danish+Layers';"
+              />
+            </figure>
+
+            <div class="collage-side">
+              <figure class="collage-sub-photo">
+                <img
+                  src="https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=600&q=85"
+                  alt="진하고 고소한 풍미의 프랑스 발효 버터"
+                  onerror="this.onerror=null;this.src='https://placehold.co/400x400/F4C44E/2B2A28?text=French+Butter';"
+                />
+              </figure>
+              <div class="collage-note">
+                <strong>반죽 · 버터 · 결</strong>
+                <span>버터가 녹으며 만든 공기층이 바삭하게 부서져요.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 버터 핵심 팩트 2열 -->
+          <div class="butter-specs">
+            <div class="butter-spec-item">
+              <small>FRENCH AOP</small>
+              <strong>프랑스 원산지 인증</strong>
+              <p>프랑스 정부가 인증한 샤랑트 푸아투 지역 특산 버터를 사용했어요.</p>
+            </div>
+            <div class="butter-spec-item">
+              <small>SLOW AGING</small>
+              <strong><span class="nowrap">18시간</span> 크림 숙성</strong>
+              <p>유크림을 <span class="nowrap">18시간</span> 동안 천천히 숙성해 깊고 깔끔한 여운을 남겼어요.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ③ STORY 02 : 한국의 속 (인절미·흑임자·옥수수 원물/음식 화보 룩북) -->
+        <section class="flavors-lookbook reveal">
+          <span class="chapter-label">02 · KOREAN HEART</span>
+          <h2 class="editorial-heading">바삭한 데니쉬 결 위에 올린<br />세 가지 한국식 크림</h2>
+          <p class="editorial-body">
+            구워도 퍽퍽해지지 않고 꾸덕하게 살아 있는 크림 필링을 가운데 채웠어요. 원하는 맛을 눌러보세요.
+          </p>
+
+          <!-- 맛 선택 탭 -->
+          <div class="taste-tabs" role="tablist" aria-label="맛별 화보 선택">
+            <button type="button" class="taste-tab active" role="tab" aria-selected="true" data-flavor="injeolmi">
+              <i style="background:#C8963E;"></i>인절미
+            </button>
+            <button type="button" class="taste-tab" role="tab" aria-selected="false" data-flavor="sesame">
+              <i style="background:#2B2A28; border:1px solid #FAF6EE;"></i>흑임자
+            </button>
+            <button type="button" class="taste-tab" role="tab" aria-selected="false" data-flavor="corn">
+              <i style="background:#F4C44E;"></i>시즌 · 옥수수
+            </button>
+          </div>
+
+          <!-- 화보 쇼케이스 -->
+          <div class="taste-showcase">
+            <div class="taste-photo-wrap">
+              <img
+                id="tasteImage"
+                src="인절미.jpg"
+                alt="콩가루가 듬뿍 묻은 고소한 인절미 크림 데니쉬"
+                onerror="this.onerror=null;this.src='https://placehold.co/720x780/C8963E/FAF6EE?text=Injeolmi+Cream';"
+              />
+              <span class="taste-photo-badge">
+                <i id="tasteBadgeDot" style="background:#C8963E;"></i>
+                <span id="tasteBadgeText">고정 시그니처 · 4입</span>
+              </span>
+              <div class="taste-photo-actions">
+                <button type="button" id="tasteUploadBtn" class="taste-upload-btn">사진 변경</button>
+                <button type="button" id="tasteSaveHtmlBtn" class="taste-save-btn">HTML 저장</button>
+              </div>
+              <input type="file" id="tasteFileInput" accept="image/*" hidden />
+              <span id="tastePairing" class="taste-pairing-badge">흰 우유와 찰떡궁합</span>
+            </div>
+
+            <div class="taste-note-area">
+              <p id="tasteFormula" class="taste-fusion-line">콩가루의 고소함 × 버터의 고소함</p>
+              <h3 id="tasteTitle" class="taste-title">인절미 크림 데니쉬</h3>
+              <p id="tasteDesc" class="taste-desc">
+                볶은 콩가루를 듬뿍 넣은 부드럽고 쫀득한 인절미 크림을 올렸어요. 바삭하게 부서지는 버터 결 뒤에 진한 고소함이 입안 가득 겹쳐요.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ④ STORY 03 : 홈카페 라이프스타일 (오븐 베이킹 화보 + 12입 지퍼백) -->
+        <section class="lifestyle-section reveal">
+          <span class="chapter-label">03 · WEEKEND HOME CAFE</span>
+          <h2 class="editorial-heading">주말 아침, 냉동실에서 꺼내<br />에어프라이어에 바로 넣으세요</h2>
+          <p class="editorial-body">
+            발효까지 마친 뒤 급속 동결한 생지라 실온에서 기다릴 필요가 없어요. 온 집안에 퍼지는 프랑스 버터 향으로 기분 좋은 아침을 시작해 보세요.
+          </p>
+
+          <figure class="brunch-banner">
+            <img
+              src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?auto=format&fit=crop&w=900&q=85"
+              alt="오븐 안에서 노릇한 황금빛으로 부풀어 오르며 구워지는 데니쉬 롤"
+              onerror="this.onerror=null;this.src='https://placehold.co/800x600/E9D8B4/2B2A28?text=Oven+Baked+Danish';"
+            />
+          </figure>
+
+          <div class="promise-list">
+            <div class="promise-row">
+              <strong>해동 <span class="nowrap">0분</span> · 발효 <span class="nowrap">0분</span></strong>
+              <span>냉동 상태 그대로 바로 조리</span>
+            </div>
+            <div class="promise-row">
+              <strong><span class="nowrap">175℃</span> · 약 <span class="nowrap">15분</span></strong>
+              <span>에어프라이어 예열 후 굽기만 하면 완성</span>
+            </div>
+            <div class="promise-row">
+              <strong>지퍼백 소분 보관</strong>
+              <span>먹을 만큼만 꺼내고 지퍼를 닫아 냉동 보관</span>
+            </div>
+          </div>
+
+          <div class="box-composition-bar">
+            <div class="box-comp-title">한 봉지 <span class="nowrap">12입</span> 믹스 구성 (분기별 시즌 맛 교체)</div>
+            <div class="box-comp-dots">
+              <span><i style="background:#C8963E;"></i>인절미 <span class="nowrap">4개</span></span>
+              <span><i style="background:#2B2A28;"></i>흑임자 <span class="nowrap">4개</span></span>
+              <span><i style="background:#F4C44E;"></i>옥수수 <span class="nowrap">4개</span> (다음 시즌: 고구마)</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- ⑤ 마무리: 에어프라이어 굽기 가이드 화면으로 전환 CTA -->
+      <footer class="closing-footer reveal">
+        <div class="closing-dots">
+          <span class="brand-dots" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+        </div>
+
+        <h2 class="closing-title">프랑스의 결, <span>한국의 속</span></h2>
+        <p class="closing-desc">지금 바로 에어프라이어로 실패 없이 구워보세요.</p>
+
+        <button type="button" id="openGuideBtn" class="cta-guide-btn">
+          <span>에어프라이어 굽기 가이드 보기</span>
+          <span aria-hidden="true">→</span>
+        </button>
+
+        <p class="footer-disclaimer">FNDA 개인과제 콘셉트 시안 · 실제 판매 중인 제품이 아닙니다</p>
+      </footer>
+    </div>
+
+    <!-- ========================================================================
+         [화면 B] 에어프라이어 굽기 가이드 & 실시간 타이머 화면
+         ======================================================================== -->
+    <div id="guideView" class="view-pane" aria-label="에어프라이어 굽기 가이드">
+      <div class="guide-view-wrap">
+        <button type="button" id="backToStoryBtn" class="guide-back-link">
+          <span aria-hidden="true">←</span>
+          <span>브랜드 스토리로 돌아가기</span>
+        </button>
+
+        <span class="chapter-label">AIR FRYER BAKING GUIDE</span>
+        <h2 class="editorial-heading">실패 없이 굽는 <span class="nowrap">3단계</span></h2>
+        <p class="editorial-body" style="margin-bottom:0;">
+          해동이나 발효 없이 냉동실에 있던 그대로 에어프라이어에 넣어주세요.
+        </p>
+
+        <!-- 3단계 카드 -->
+        <div class="guide-steps-list">
+          <article class="guide-step-card">
+            <span class="guide-step-num">1</span>
+            <div>
+              <h3>필요한 만큼만 꺼내기</h3>
+              <p>해동하지 않아요. 남은 건 지퍼를 꼭 닫아 다시 냉동실에 넣어요.</p>
+            </div>
+          </article>
+
+          <article class="guide-step-card">
+            <span class="guide-step-num">2</span>
+            <div>
+              <h3>에어프라이어 <span class="nowrap">175℃</span> 예열</h3>
+              <p><span class="nowrap">3분</span>이면 충분해요.</p>
+            </div>
+          </article>
+
+          <article class="guide-step-card">
+            <span class="guide-step-num">3</span>
+            <div>
+              <h3>필링이 위로, 겹치지 않게</h3>
+              <p>바스켓에 간격을 두고 놓은 뒤 아래 타이머를 눌러주세요.</p>
+            </div>
+          </article>
+        </div>
+
+        <p class="guide-footnote">* 온도·시간은 예시예요. 실제 값은 R&amp;D에서 확정해요.</p>
+
+        <!-- 실시간 에어프라이어 타이머 -->
+        <div id="timerCard" class="timer-card">
+          <div class="timer-tabs" role="tablist" aria-label="굽기 개수 선택">
+            <button type="button" class="timer-tab active" role="tab" aria-selected="true" data-minutes="15">
+              <span class="nowrap">1~2개</span> · <span class="nowrap">15분</span>
+            </button>
+            <button type="button" class="timer-tab" role="tab" aria-selected="false" data-minutes="18">
+              <span class="nowrap">3~4개</span> · <span class="nowrap">18분</span>
+            </button>
+          </div>
+
+          <div class="timer-ring-box">
+            <svg class="timer-svg" viewBox="0 0 220 220" aria-hidden="true">
+              <circle class="ring-track" cx="110" cy="110" r="92"></circle>
+              <circle id="ringProgress" class="ring-progress" cx="110" cy="110" r="92"></circle>
+              <circle id="ringCheckpointDot" class="ring-checkpoint-dot" cx="110" cy="18" r="6"></circle>
+            </svg>
+            <div class="timer-center">
+              <div id="timerDigits" class="timer-digits">15:00</div>
+              <div class="timer-temp-label"><span class="nowrap">175℃</span> · 예열 후</div>
+            </div>
+          </div>
+
+          <div class="timer-checkpoint-legend">
+            <i></i>
+            <span>종료 <span class="nowrap">5분</span> 전 노란 지점에서 중간 확인</span>
+          </div>
+
+          <div class="timer-controls">
+            <button type="button" id="timerPrimaryBtn" class="btn-timer-primary">시작</button>
+            <button type="button" id="timerResetBtn" class="btn-timer-reset">다시</button>
+          </div>
+
+          <p id="timerStatusText" class="timer-status-text">예열이 끝나면 시작을 눌러주세요.</p>
+        </div>
+
+        <!-- 혹시 실패했다면 접는 메뉴 3개 -->
+        <div class="troubleshoot-wrap">
+          <h3 class="troubleshoot-heading">혹시 실패했다면</h3>
+          <div class="accordion-list">
+            <div class="accordion-item">
+              <button type="button" class="accordion-trigger" aria-expanded="false">
+                <span>겉은 탔는데 속이 덜 익었어요</span>
+                <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <div class="accordion-panel-inner">
+                  온도를 <span class="nowrap">10℃</span> 낮추고 <span class="nowrap">3분</span> 더 구워주세요.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <button type="button" class="accordion-trigger" aria-expanded="false">
+                <span>필링이 옆으로 흘렀어요</span>
+                <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <div class="accordion-panel-inner">
+                  수평으로, 서로 닿지 않게 놓아주세요.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <button type="button" class="accordion-trigger" aria-expanded="false">
+                <span>에어프라이어가 작아요</span>
+                <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <div class="accordion-panel-inner">
+                  <span class="nowrap">2개</span>씩 나눠 구워주세요.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 냉동 보관 안내 -->
+        <div class="guide-storage-grid">
+          <div class="guide-storage-card">
+            <strong><span class="nowrap">-18℃</span> 냉동 보관</strong>
+            <span>해동 없이 냉동실에 보관해요</span>
+          </div>
+          <div class="guide-storage-card">
+            <strong>지퍼백 밀봉</strong>
+            <span>꺼낸 뒤 닫으면 성에가 덜 껴요</span>
+          </div>
+        </div>
+
+        <p class="footer-disclaimer" style="text-align:center; margin-top:28px;">
+          FNDA 개인과제 콘셉트 시안 · 실제 판매 중인 제품이 아닙니다
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 하단 토스트 알림 -->
+  <div id="toastBanner" class="toast-banner" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      /* ------------------------------------------------------------------------
+         1. 맛 3종 음식 화보 & 테이스팅 노트 전환 (사용자 사진 직접 지정 가능)
+         ------------------------------------------------------------------------ */
+      // 같은 폴더에 있는 이미지 파일명을 연결해 두었습니다.
+      const CUSTOM_FLAVOR_IMAGES = {
+        injeolmi: "인절미.jpg",
+        sesame: "흑임자.jpg",
+        corn: "옥수수.jpg"
+      };
+
+      const flavorProfiles = {
+        injeolmi: {
+          image: CUSTOM_FLAVOR_IMAGES.injeolmi || "인절미.jpg",
+          fallback: "https://placehold.co/720x780/C8963E/FAF6EE?text=Injeolmi+Cream",
+          alt: "콩가루가 듬뿍 묻은 고소한 인절미 크림 데니쉬",
+          dot: "#C8963E",
+          badge: "고정 시그니처 · 4입",
+          pairing: "흰 우유와 찰떡궁합",
+          formula: "콩가루의 고소함 × 버터의 고소함",
+          title: "인절미 크림 데니쉬",
+          desc: "볶은 콩가루를 듬뿍 넣은 부드럽고 쫀득한 인절미 크림을 올렸어요. 바삭하게 부서지는 버터 결 뒤에 진한 고소함이 입안 가득 겹쳐요."
+        },
+        sesame: {
+          image: CUSTOM_FLAVOR_IMAGES.sesame || "흑임자.jpg",
+          fallback: "https://placehold.co/720x780/2B2A28/FAF6EE?text=Black+Sesame",
+          alt: "진하고 고소한 검은깨와 흑임자 크림 데니쉬",
+          dot: "#2B2A28",
+          badge: "고정 시그니처 · 4입",
+          pairing: "따뜻한 아메리카노와 함께",
+          formula: "검은깨의 진한 향 × 깊은 버터 향",
+          title: "흑임자 크림 데니쉬",
+          desc: "고소하게 볶아 갈아낸 검은깨 크림을 묵직하게 채웠어요. 달지 않고 담백해서 커피 한 잔과 곁들이기 가장 좋은 어른의 디저트예요."
+        },
+        corn: {
+          image: CUSTOM_FLAVOR_IMAGES.corn || "옥수수.jpg",
+          fallback: "https://placehold.co/720x780/F4C44E/2B2A28?text=Sweet+Corn",
+          alt: "노랗고 달콤한 통옥수수가 올라간 옥수수 크림 데니쉬",
+          dot: "#F4C44E",
+          badge: "이번 시즌 한정 · 4입",
+          pairing: "카페라떼와 함께",
+          formula: "제철 옥수수의 달큰함 × 바삭한 결",
+          title: "옥수수 크림 데니쉬",
+          desc: "톡톡 씹히는 옥수수 알갱이와 부드러운 커스터드 크림이 어우러졌어요. 시즌 맛은 분기마다 고구마·밤 등 새로운 한국식 재료로 바뀌어요."
+        }
+      };
+
+      const tasteTabs = Array.from(document.querySelectorAll(".taste-tab"));
+      const tasteImage = document.getElementById("tasteImage");
+      const tasteBadgeDot = document.getElementById("tasteBadgeDot");
+      const tasteBadgeText = document.getElementById("tasteBadgeText");
+      const tastePairing = document.getElementById("tastePairing");
+      const tasteFormula = document.getElementById("tasteFormula");
+      const tasteTitle = document.getElementById("tasteTitle");
+      const tasteDesc = document.getElementById("tasteDesc");
+
+      tasteTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const key = tab.dataset.flavor;
+          const item = flavorProfiles[key];
+          if (!item) return;
+
+          tasteTabs.forEach((t) => {
+            t.classList.remove("active");
+            t.setAttribute("aria-selected", "false");
+          });
+          tab.classList.add("active");
+          tab.setAttribute("aria-selected", "true");
+
+          tasteImage.style.opacity = "0.35";
+          setTimeout(() => {
+            tasteImage.onerror = function () {
+              this.onerror = null;
+              this.src = item.fallback;
+            };
+            tasteImage.src = item.image;
+            tasteImage.alt = item.alt;
+            tasteImage.style.opacity = "1";
+          }, 140);
+
+          tasteBadgeDot.style.backgroundColor = item.dot;
+          tasteBadgeDot.style.border = key === "sesame" ? "1px solid #FAF6EE" : "none";
+          tasteBadgeText.textContent = item.badge;
+          tastePairing.textContent = item.pairing;
+          tasteFormula.textContent = item.formula;
+          tasteTitle.textContent = item.title;
+          tasteDesc.textContent = item.desc;
+        });
+      });
+
+      /* ------------------------------------------------------------------------
+         2. 에어프라이어 굽기 타이머 (Date 기준 계산, Wake Lock, 5분 전 알림, ?speed=60)
+         ------------------------------------------------------------------------ */
+      const toastEl = document.getElementById("toastBanner");
+      let toastTimer = null;
+
+      function showToast(message, duration = 4200) {
+        toastEl.textContent = message;
+        toastEl.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastEl.classList.remove("show");
+        }, duration);
+      }
+
+      function triggerHaptic(pattern) {
+        try {
+          if (navigator.vibrate) navigator.vibrate(pattern);
+        } catch (_) {}
+      }
+
+      let audioCtx = null;
+      function unlockAudio() {
+        try {
+          if (!audioCtx) {
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            if (Ctx) audioCtx = new Ctx();
+          }
+          if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+        } catch (_) {}
+      }
+
+      function playChimeBeep(count = 3, freq = 880) {
+        try {
+          unlockAudio();
+          if (!audioCtx) return;
+          const now = audioCtx.currentTime;
+          for (let i = 0; i < count; i++) {
+            const start = now + i * 0.22;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, start);
+            gain.gain.setValueAtTime(0.0001, start);
+            gain.gain.exponentialRampToValueAtTime(0.18, start + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.16);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(start);
+            osc.stop(start + 0.17);
+          }
+        } catch (_) {}
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const parsedSpeed = Number(urlParams.get("speed"));
+      const speedMultiplier = parsedSpeed > 0 ? parsedSpeed : 1;
+
+      const timerTabs = Array.from(document.querySelectorAll(".timer-tab"));
+      const timerDigitsEl = document.getElementById("timerDigits");
+      const ringProgressEl = document.getElementById("ringProgress");
+      const ringCheckpointDot = document.getElementById("ringCheckpointDot");
+      const timerPrimaryBtn = document.getElementById("timerPrimaryBtn");
+      const timerResetBtn = document.getElementById("timerResetBtn");
+      const timerStatusText = document.getElementById("timerStatusText");
+      const miniTimerPill = document.getElementById("miniTimerPill");
+      const miniTimerText = document.getElementById("miniTimerText");
+
+      const RING_RADIUS = 92;
+      const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+      ringProgressEl.style.strokeDasharray = `${RING_CIRCUMFERENCE}`;
+      ringProgressEl.style.strokeDashoffset = "0";
+
+      let totalSeconds = 15 * 60;
+      let elapsedBeforePause = 0;
+      let runStartTimestamp = null;
+      let isRunning = false;
+      let midCheckNotified = false;
+      let timerInterval = null;
+      let wakeLockSentinel = null;
+
+      async function requestWakeLock() {
+        try {
+          if ("wakeLock" in navigator && !wakeLockSentinel) {
+            wakeLockSentinel = await navigator.wakeLock.request("screen");
+            wakeLockSentinel.addEventListener("release", () => { wakeLockSentinel = null; });
+          }
+        } catch (_) {}
+      }
+
+      async function releaseWakeLock() {
+        try {
+          if (wakeLockSentinel) {
+            await wakeLockSentinel.release();
+            wakeLockSentinel = null;
+          }
+        } catch (_) {}
+      }
+
+      function positionCheckpointDot() {
+        const checkElapsedRatio = Math.max(0, Math.min(1, (totalSeconds - 300) / totalSeconds));
+        const angleRad = checkElapsedRatio * 2 * Math.PI - Math.PI / 2;
+        const cx = 110 + RING_RADIUS * Math.cos(angleRad);
+        const cy = 110 + RING_RADIUS * Math.sin(angleRad);
+        ringCheckpointDot.setAttribute("cx", cx.toFixed(2));
+        ringCheckpointDot.setAttribute("cy", cy.toFixed(2));
+      }
+
+      function formatMMSS(sec) {
+        const clamped = Math.max(0, Math.ceil(sec));
+        const m = Math.floor(clamped / 60);
+        const s = clamped % 60;
+        return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+      }
+
+      function getCurrentElapsed() {
+        if (!isRunning || runStartTimestamp === null) return elapsedBeforePause;
+        return elapsedBeforePause + ((Date.now() - runStartTimestamp) / 1000) * speedMultiplier;
+      }
+
+      function syncRunningUI(running) {
+        miniTimerPill.classList.toggle("visible", running);
+        timerPrimaryBtn.classList.toggle("is-running", running);
+      }
+
+      function renderTimer() {
+        const elapsed = getCurrentElapsed();
+        const remaining = Math.max(0, totalSeconds - elapsed);
+        const formatted = formatMMSS(remaining);
+
+        timerDigitsEl.textContent = formatted;
+        miniTimerText.textContent = formatted;
+
+        const remainingRatio = totalSeconds > 0 ? remaining / totalSeconds : 0;
+        ringProgressEl.style.strokeDashoffset = `${RING_CIRCUMFERENCE * (1 - remainingRatio)}`;
+
+        if (isRunning && !midCheckNotified && remaining <= 300 && remaining > 0) {
+          midCheckNotified = true;
+          showToast("중간 확인 — 노릇한 색이 나는지 봐주세요", 4800);
+          triggerHaptic([120, 70, 120]);
+          playChimeBeep(1, 660);
+        }
+
+        if (isRunning && remaining <= 0) {
+          completeTimer();
+        }
+      }
+
+      function startTimer() {
+        if (isRunning) return;
+        unlockAudio();
+        if (elapsedBeforePause >= totalSeconds) {
+          elapsedBeforePause = 0;
+          midCheckNotified = false;
+        }
+        isRunning = true;
+        runStartTimestamp = Date.now();
+        timerPrimaryBtn.textContent = "일시정지";
+        timerStatusText.textContent = "굽는 중이에요. 스토리를 보면서 기다리셔도 돼요.";
+        syncRunningUI(true);
+        requestWakeLock();
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(renderTimer, 150);
+        renderTimer();
+      }
+
+      function pauseTimer() {
+        if (!isRunning) return;
+        elapsedBeforePause = getCurrentElapsed();
+        isRunning = false;
+        runStartTimestamp = null;
+        clearInterval(timerInterval);
+        timerPrimaryBtn.textContent = "계속";
+        timerStatusText.textContent = "잠시 멈췄어요. 계속하려면 눌러주세요.";
+        syncRunningUI(false);
+        releaseWakeLock();
+        renderTimer();
+      }
+
+      function resetTimer() {
+        isRunning = false;
+        elapsedBeforePause = 0;
+        runStartTimestamp = null;
+        midCheckNotified = false;
+        clearInterval(timerInterval);
+        timerPrimaryBtn.textContent = "시작";
+        timerStatusText.textContent = "예열이 끝나면 시작을 눌러주세요.";
+        syncRunningUI(false);
+        releaseWakeLock();
+        positionCheckpointDot();
+        renderTimer();
+      }
+
+      function completeTimer() {
+        isRunning = false;
+        elapsedBeforePause = totalSeconds;
+        runStartTimestamp = null;
+        clearInterval(timerInterval);
+        timerPrimaryBtn.textContent = "시작";
+        timerStatusText.textContent = "굽기 완료! 2분 식힌 뒤 맛있게 드세요.";
+        syncRunningUI(false);
+        releaseWakeLock();
+        renderTimer();
+
+        showToast("완성! 2분 식히면 필링이 덜 뜨거워요", 5500);
+        triggerHaptic([200, 100, 200, 100, 300]);
+        playChimeBeep(3, 880);
+      }
+
+      timerPrimaryBtn.addEventListener("click", () => (isRunning ? pauseTimer() : startTimer()));
+      timerResetBtn.addEventListener("click", resetTimer);
+
+      timerTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          timerTabs.forEach((t) => {
+            t.classList.remove("active");
+            t.setAttribute("aria-selected", "false");
+          });
+          tab.classList.add("active");
+          tab.setAttribute("aria-selected", "true");
+          totalSeconds = (Number(tab.dataset.minutes) || 15) * 60;
+          resetTimer();
+        });
+      });
+
+      miniTimerPill.addEventListener("click", () => {
+        switchView("guide", true);
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible" && isRunning) {
+          renderTimer();
+          requestWakeLock();
+        }
+      });
+
+      positionCheckpointDot();
+      renderTimer();
+
+      /* ------------------------------------------------------------------------
+         3. "혹시 실패했다면" 접는 메뉴(아코디언)
+         ------------------------------------------------------------------------ */
+      const accordionItems = Array.from(document.querySelectorAll(".accordion-item"));
+      accordionItems.forEach((item) => {
+        const trigger = item.querySelector(".accordion-trigger");
+        const panel = item.querySelector(".accordion-panel");
+
+        trigger.addEventListener("click", () => {
+          const isOpen = item.classList.contains("open");
+          accordionItems.forEach((other) => {
+            other.classList.remove("open");
+            other.querySelector(".accordion-trigger").setAttribute("aria-expanded", "false");
+            other.querySelector(".accordion-panel").style.maxHeight = null;
+          });
+          if (!isOpen) {
+            item.classList.add("open");
+            trigger.setAttribute("aria-expanded", "true");
+            panel.style.maxHeight = panel.scrollHeight + "px";
+          }
+        });
+      });
+
+      /* ------------------------------------------------------------------------
+         4. 스크롤 등장 애니메이션
+         ------------------------------------------------------------------------ */
+      const revealEls = Array.from(document.querySelectorAll(".reveal"));
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.14 }
+        );
+        revealEls.forEach((el) => observer.observe(el));
+      } else {
+        revealEls.forEach((el) => el.classList.add("is-visible"));
+      }
+    })();
+  </script>
+</body>
+</html>
