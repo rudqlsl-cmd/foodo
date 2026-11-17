@@ -1109,7 +1109,8 @@
           <span class="mini-timer-dot" aria-hidden="true"></span>
           <span id="miniTimerText">15:00</span>
         </button>
-        <button type="button" id="headerModeBtn" class="header-guide-btn" onclick="switchView('guide')">굽기 가이드 →</button>
+        <!-- 인라인 onclick 제거 및 전용 ID 부여 -->
+        <button type="button" id="headerModeBtn" class="header-guide-btn">굽기 가이드 →</button>
       </div>
     </header>
 
@@ -1296,7 +1297,8 @@
         <h2 class="closing-title">프랑스의 결, <span>한국의 속</span></h2>
         <p class="closing-desc">지금 바로 에어프라이어로 실패 없이 구워보세요.</p>
 
-        <button type="button" id="openGuideBtn" class="cta-guide-btn" onclick="switchView('guide')">
+        <!-- 인라인 onclick 제거 및 전용 ID 부여 -->
+        <button type="button" id="openGuideBtn" class="cta-guide-btn">
           <span>에어프라이어 굽기 가이드 보기</span>
           <span aria-hidden="true">→</span>
         </button>
@@ -1310,7 +1312,8 @@
          ======================================================================== -->
     <div id="guideView" class="view-pane" aria-label="에어프라이어 굽기 가이드">
       <div class="guide-view-wrap">
-        <button type="button" id="backToStoryBtn" class="guide-back-link" onclick="switchView('story')">
+        <!-- 인라인 onclick 제거 및 전용 ID 부여 -->
+        <button type="button" id="backToStoryBtn" class="guide-back-link">
           <span aria-hidden="true">←</span>
           <span>브랜드 스토리로 돌아가기</span>
         </button>
@@ -1459,9 +1462,8 @@
   <script>
     (() => {
       /* ------------------------------------------------------------------------
-         1. 맛 3종 음식 화보 & 테이스팅 노트 전환 (사용자 사진 직접 지정 가능)
+         1. 맛 3종 음식 화보 & 테이스팅 노트 전환
          ------------------------------------------------------------------------ */
-      // 같은 폴더에 있는 이미지 파일명을 연결해 두었습니다.
       const CUSTOM_FLAVOR_IMAGES = {
         injeolmi: "인절미.jpg",
         sesame: "흑임자.jpg",
@@ -1470,7 +1472,7 @@
 
       const flavorProfiles = {
         injeolmi: {
-          image: CUSTOM_FLAVOR_IMAGES.injeolmi || "인절미.jpg",
+          image: CUSTOM_FLAVOR_IMAGES.injeolmi,
           fallback: "https://placehold.co/720x780/C8963E/FAF6EE?text=Injeolmi+Cream",
           alt: "콩가루가 듬뿍 묻은 고소한 인절미 크림 데니쉬",
           dot: "#C8963E",
@@ -1481,7 +1483,7 @@
           desc: "볶은 콩가루를 듬뿍 넣은 부드럽고 쫀득한 인절미 크림을 올렸어요. 바삭하게 부서지는 버터 결 뒤에 진한 고소함이 입안 가득 겹쳐요."
         },
         sesame: {
-          image: CUSTOM_FLAVOR_IMAGES.sesame || "흑임자.jpg",
+          image: CUSTOM_FLAVOR_IMAGES.sesame,
           fallback: "https://placehold.co/720x780/2B2A28/FAF6EE?text=Black+Sesame",
           alt: "진하고 고소한 검은깨와 흑임자 크림 데니쉬",
           dot: "#2B2A28",
@@ -1492,7 +1494,7 @@
           desc: "고소하게 볶아 갈아낸 검은깨 크림을 묵직하게 채웠어요. 달지 않고 담백해서 커피 한 잔과 곁들이기 가장 좋은 어른의 디저트예요."
         },
         corn: {
-          image: CUSTOM_FLAVOR_IMAGES.corn || "옥수수.jpg",
+          image: CUSTOM_FLAVOR_IMAGES.corn,
           fallback: "https://placehold.co/720x780/F4C44E/2B2A28?text=Sweet+Corn",
           alt: "노랗고 달콤한 통옥수수가 올라간 옥수수 크림 데니쉬",
           dot: "#F4C44E",
@@ -1553,6 +1555,8 @@
       const storyView = document.getElementById("storyView");
       const guideView = document.getElementById("guideView");
       const headerModeBtn = document.getElementById("headerModeBtn");
+      const openGuideBtn = document.getElementById("openGuideBtn");
+      const backToStoryBtn = document.getElementById("backToStoryBtn");
 
       window.switchView = function(targetName, scrollToTop = true) {
         if (!storyView || !guideView) return;
@@ -1574,6 +1578,20 @@
         headerModeBtn.addEventListener("click", () => {
           const isStoryActive = storyView.classList.contains("active");
           window.switchView(isStoryActive ? "guide" : "story");
+        });
+      }
+
+      if (openGuideBtn) {
+        openGuideBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.switchView("guide");
+        });
+      }
+
+      if (backToStoryBtn) {
+        backToStoryBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.switchView("story");
         });
       }
 
