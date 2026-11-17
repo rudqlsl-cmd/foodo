@@ -1109,7 +1109,7 @@
           <span class="mini-timer-dot" aria-hidden="true"></span>
           <span id="miniTimerText">15:00</span>
         </button>
-        <button type="button" id="headerModeBtn" class="header-guide-btn">굽기 가이드 →</button>
+        <button type="button" id="headerModeBtn" class="header-guide-btn" onclick="switchView('guide')">굽기 가이드 →</button>
       </div>
     </header>
 
@@ -1296,7 +1296,7 @@
         <h2 class="closing-title">프랑스의 결, <span>한국의 속</span></h2>
         <p class="closing-desc">지금 바로 에어프라이어로 실패 없이 구워보세요.</p>
 
-        <button type="button" id="openGuideBtn" class="cta-guide-btn">
+        <button type="button" id="openGuideBtn" class="cta-guide-btn" onclick="switchView('guide')">
           <span>에어프라이어 굽기 가이드 보기</span>
           <span aria-hidden="true">→</span>
         </button>
@@ -1310,7 +1310,7 @@
          ======================================================================== -->
     <div id="guideView" class="view-pane" aria-label="에어프라이어 굽기 가이드">
       <div class="guide-view-wrap">
-        <button type="button" id="backToStoryBtn" class="guide-back-link">
+        <button type="button" id="backToStoryBtn" class="guide-back-link" onclick="switchView('story')">
           <span aria-hidden="true">←</span>
           <span>브랜드 스토리로 돌아가기</span>
         </button>
@@ -1553,31 +1553,29 @@
       const storyView = document.getElementById("storyView");
       const guideView = document.getElementById("guideView");
       const headerModeBtn = document.getElementById("headerModeBtn");
-      const openGuideBtn = document.getElementById("openGuideBtn");
-      const backToStoryBtn = document.getElementById("backToStoryBtn");
 
-      function switchView(targetName, scrollToTop = true) {
+      window.switchView = function(targetName, scrollToTop = true) {
+        if (!storyView || !guideView) return;
         if (targetName === "guide") {
           storyView.classList.remove("active");
           guideView.classList.add("active");
-          headerModeBtn.textContent = "스토리로 돌아가기 →";
+          if (headerModeBtn) headerModeBtn.textContent = "스토리로 돌아가기 →";
         } else {
           guideView.classList.remove("active");
           storyView.classList.add("active");
-          headerModeBtn.textContent = "굽기 가이드 →";
+          if (headerModeBtn) headerModeBtn.textContent = "굽기 가이드 →";
         }
         if (scrollToTop) {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
+      };
+
+      if (headerModeBtn) {
+        headerModeBtn.addEventListener("click", () => {
+          const isStoryActive = storyView.classList.contains("active");
+          window.switchView(isStoryActive ? "guide" : "story");
+        });
       }
-
-      headerModeBtn.addEventListener("click", () => {
-        const isStoryActive = storyView.classList.contains("active");
-        switchView(isStoryActive ? "guide" : "story");
-      });
-
-      openGuideBtn.addEventListener("click", () => switchView("guide"));
-      backToStoryBtn.addEventListener("click", () => switchView("story"));
 
       /* ------------------------------------------------------------------------
          2. 에어프라이어 굽기 타이머 (Date 기준 계산, Wake Lock, 5분 전 알림, ?speed=60)
